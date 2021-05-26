@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - "$PWD/prometheus/etc/prometheus:/etc/prometheus"
+      - "$PWD/prometheus/data:/prometheus"
+    restart: always
+    network_mode: bridge
+
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - "$PWD/alertmanager/etc/alertmanager:/etc/alertmanager"
+      - "$PWD/alertmanager/data:/alertmanager"
+    restart: always
+    network_mode: bridge
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - "$PWD/grafana/etc/grafana.ini:/etc/grafana/grafana.ini:"
+      - "$PWD/grafana/data:/var/lib/grafana"
+    expose:
+      - "3000"
+    environment:
+      - VIRTUAL_PORT=3000
+#      - LETSENCRYPT_TEST=true
+      - VIRTUAL_HOST=grafana.akira.cz
+      - LETSENCRYPT_HOST=grafana.akira.cz
+      - LETSENCRYPT_EMAIL=hufhendr@gmail.com
+
+    restart: always
+    network_mode: bridge

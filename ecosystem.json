@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "roboz",
+      "script": "./run.sh",
+      "interpreter": "bash"
+    }
+  ]
+}
