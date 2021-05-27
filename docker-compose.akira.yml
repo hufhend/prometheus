@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  grafana:
+    volumes:
+      - "$PWD/grafana/etc/grafana.akira.ini:/etc/grafana/grafana.ini:"
+    environment:
+      - VIRTUAL_PORT=3000
+#      - LETSENCRYPT_TEST=true
+      - VIRTUAL_HOST=grafana.akira.cz
+      - LETSENCRYPT_HOST=grafana.akira.cz
+      - LETSENCRYPT_EMAIL=hufhendr@gmail.com
