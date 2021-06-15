@@ -30,6 +30,13 @@ services:
       - "3000"
     restart: always
 
+  pushgateway:
+    image: prom/pushgateway
+    container_name: pushgateway
+    ports:
+      - "9091:9091"
+    restart: always
+
 networks:
   default:
     external: true
