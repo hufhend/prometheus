@@ -3,8 +3,8 @@
 #   begin     : Thu 20 May 2021.
 #   copyright : (c) 2021 Václav Dvorský
 #   email     : vaclav.dvorsky@inventi.cz
-#   $Id: create_directories.sh, v1.42 09/06/2021
-#   test with Prom v2.27.1, Grafana v7.5.7
+#   $Id: create_directories.sh, v1.50 16/06/2021
+#   test with Prom v2.27.1, Grafana v8.0.2
 #   *********************************************
 #
 #   --------------------------------------------------------------------
@@ -16,6 +16,16 @@
 
 #!/bin/bash
 if ! [ $(id -u) = 0 ]; then
+    if [ -d ../prometheus ]
+    then
+        echo "Prometheus already exists, I'm just updating"
+        rsync -av . ../prometheus/
+        cd ../prometheus
+        docker-compose pull && docker-compose up -d >/dev/null
+        cd ..; rm -rf prometheus-master*
+        exit 0
+    fi
+
     cd ..
     [ -f prometheus-master.* ] && rm prometheus-master.*
     [ ! -d prometheus ] && mv prometheus* prometheus
