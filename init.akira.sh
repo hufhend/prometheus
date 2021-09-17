@@ -40,10 +40,10 @@ if ! [ $(id -u) = 0 ]; then
     sudo chown -R 472:root grafana/data
     sudo chown root:root prometheus/data
     cd ..
-    git clone https://github.com/nginx-proxy/acme-companion
-    cd acme-companion
-    cp ../prometheus/acme-companion/docker-compose.yml .
-    docker-compose up -d
+#    git clone https://github.com/nginx-proxy/acme-companion
+#    cd acme-companion
+#    cp ../prometheus/acme-companion/docker-compose.yml .
+#    docker-compose up -d
     cd ../prometheus
     docker-compose -f docker-compose.yml -f docker-compose.akira.yml up -d
   exit 0

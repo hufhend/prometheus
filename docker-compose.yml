@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.3"
 
 services:
   prometheus:
@@ -26,18 +26,53 @@ services:
     container_name: grafana
     volumes:
       - "$PWD/grafana/data:/var/lib/grafana"
-    expose:
-      - "3000"
-    restart: always
-
-  pushgateway:
-    image: prom/pushgateway
-    container_name: pushgateway
     ports:
-      - "9091:9091"
+      - "3000:3000"
     restart: always
 
-networks:
-  default:
-    external: true
-    name: prometheus
+  node_exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+    command:
+      - '--path.rootfs=/host'
+#    network_mode: host
+#    pid: host
+    restart: always
+    volumes:
+      - '/:/host:ro,rslave'
+    expose:
+      - 9100
+
+  snmp-exporter:
+    image: quay.io/prometheus/snmp-exporter
+    container_name: snmp-exporter
+    volumes:
+      - ./snmp_exporter/:/etc/snmp_exporter/
+#    expose:
+#      - 9116
+    ports:
+      - 9116:9116
+    restart: always
+
+#  snmp:
+#    image: quay.io/prometheus/snmp-exporter
+#    container_name: snmp-exporter
+#    volumes:
+#      - "$PWD/data:/etc/snmp_exporter"
+#    ports:
+#      - 9116:9116
+#      - 116:116/udp
+#    restart: always
+#    command: --config.file=/etc/snmp_exporter/snmp.yml
+
+#  pushgateway:
+#    image: prom/pushgateway
+#    container_name: pushgateway
+#    ports:
+#      - "9091:9091"
+#    restart: always
+
+#networks:
+#  default:
+#    external: true
+#    name: prometheus
