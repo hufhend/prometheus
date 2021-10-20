@@ -1,5 +1,5 @@
 groups:
-  - name: prometheus
+  - name: "prometheus"
     rules:
       - alert: ExporterDown
         expr: up == 0
@@ -8,7 +8,35 @@ groups:
           severity: warning
         annotations:
           summary: "Exporter down (instance {{ $labels.instance }})"
-          description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+          description: "Prometheus exporter down\n  VALUE = {{ $value }}\n  LABELS: Component {{ $labels.instance }} from {{ $labels.job }}"
+
+      - alert: NginxHighHttp5xxErrorRate
+        expr: rate(nginx_http_response_count_total{env!="develop", status=~"5[0-9]*"}[1m])  > 5
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Nginx high HTTP 5xx error rate (instance {{ $labels.exported_instance }})
+          description: "Too many HTTP requests with status 5xx (> 5)\n  VALUE = {{ $value }}\n  LABELS = App {{ $labels.app }} in {{ $labels.env }} on {{ $labels.host }} method {{ $labels.method }} status {{ $labels.status }}"
+
+# 4xx status are not evaluated, can be used for debugging
+#      - alert: NginxHighHttp4xxErrorRate
+#        expr: rate(nginx_http_response_count_total{env!="develop", status=~"4[0-9]*"}[1m])  > 5
+#        for: 2m
+#        labels:
+#          severity: critical
+#        annotations:
+#          summary: Nginx high HTTP 4xx error rate (instance {{ $labels.exported_instance }})
+#          description: "Too many HTTP requests with status 4xx (> 5)\n  VALUE = {{ $value }}\n  LABELS = App {{ $labels.app }} in {{ $labels.env }} on {{ $labels.host }} method {{ $labels.method }} status {{ $labels.status }}"
+
+      - alert: NginxLatencyHigh
+        expr: rate(nginx_http_response_time_seconds{env!="develop",quantile="0.99",status=~"2[0-9]*"}[2m]) > 3
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: Nginx latency high (instance {{ $labels.instance }})
+          description: "Nginx p99 latency is higher than 3 seconds\n  VALUE = {{ $value }}\n  LABELS = App {{ $labels.app }} in {{ $labels.env }} on {{ $labels.host }} method {{ $labels.method }} status {{ $labels.status }} quantile {{ $labels.quantile }}"
 
   - name: "physical resources"
     rules:
@@ -31,19 +59,20 @@ groups:
           description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
       - alert: OutOfDiskSpace
-        expr: node_filesystem_free_bytes{mountpoint ="/rootfs"} / node_filesystem_size_bytes{mountpoint ="/rootfs"} * 100 < 10
+        expr: node_filesystem_avail_bytes{mountpoint ="/"} / node_filesystem_size_bytes{mountpoint ="/"} * 100 < 15
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: "Out of disk space (instance {{ $labels.instance }})"
-          description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+          description: "Disk is almost full (< 15% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
-      - alert: DiskWillFillIn4Hours
-        expr: predict_linear(node_filesystem_free_bytes[1h], 4 * 3600) < 0
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Disk will fill in 4 hours (instance {{ $labels.instance }})"
-          description: "Disk will fill in 4 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+# not in metrics 
+#      - alert: DiskWillFillIn4Hours
+#        expr: predict_linear(node_filesystem_free_bytes[1h], 4 * 3600) < 0
+#        for: 5m
+#        labels:
+#          severity: warning
+#        annotations:
+#          summary: "Disk will fill in 4 hours (instance {{ $labels.instance }})"
+#          description: "Disk will fill in 4 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
