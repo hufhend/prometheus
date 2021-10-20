@@ -38,3 +38,5 @@ volumes:
 networks:
   default:
     name: prometheus
+
+#This is only for quick standalone emergency start of acme-companion
