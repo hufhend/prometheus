@@ -94,7 +94,3 @@ volumes:
   dhparam:
   certs:
   acme:
-
-networks:
-  default:
-    name: prometheus
