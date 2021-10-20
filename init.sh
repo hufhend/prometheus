@@ -15,6 +15,13 @@
 #   --------------------------------------------------------------------
 
 #!/bin/bash
+if ! [ $(id -u) = 0 ]; then
+    if [ -d KLF ]
+    then
+        echo "The Prometheus directory already exists"
+        exit 0
+    fi
+
     # preparing the environment for the first run
     mkdir -p prometheus/data
     mkdir -p prometheus/data/chunks_head
