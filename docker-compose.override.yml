@@ -3,7 +3,7 @@ version: "3.7"
 services:
   grafana:
     volumes:
-      - "$PWD/grafana/etc/grafana.akira.ini:/etc/grafana/grafana.ini:"
+      - "$PWD/grafana/etc/grafana.ini:/etc/grafana/grafana.ini:"
     environment:
       - VIRTUAL_PORT=3000
 #      - LETSENCRYPT_TEST=true
