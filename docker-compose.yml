@@ -1,28 +1,32 @@
-version: "3.7"
+version: "3.8"
 
 services:
   prometheus:
-    image: prom/prometheus
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
     container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
-      - "$PWD/prometheus/etc/prometheus:/etc/prometheus"
       - "$PWD/prometheus/data:/prometheus"
     restart: always
 
   alertmanager:
-    image: prom/alertmanager
+    build:
+      context: ./alertmanager
+      dockerfile: Dockerfile
     container_name: alertmanager
     ports:
       - "9093:9093"
     volumes:
-      - "$PWD/alertmanager/etc/alertmanager:/etc/alertmanager"
       - "$PWD/alertmanager/data:/alertmanager"
     restart: always
 
   grafana:
-    image: grafana/grafana
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
     container_name: grafana
     volumes:
       - "$PWD/grafana/data:/var/lib/grafana"
@@ -30,7 +34,67 @@ services:
       - "3000"
     restart: always
 
+  pushgateway:
+    build:
+      context: ./pushgateway
+      dockerfile: Dockerfile
+    container_name: pushgateway
+    ports:
+      - "9091:9091"
+    restart: always
+
+  node_exporter:
+    build:
+      context: ./node_exporter
+      dockerfile: Dockerfile
+    container_name: node-exporter
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+    expose:
+      - 9100
+
+  nginx-proxy:
+    build:
+      context: ./nginx-proxy
+      dockerfile: Dockerfile
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+
+  acme-companion:
+    build:
+      context: ./acme-companion
+      dockerfile: Dockerfile
+    container_name: nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
+  acme:
+
 networks:
   default:
-    external: true
     name: prometheus

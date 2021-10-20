@@ -1,0 +1,18 @@
+variables:
+  NODE_EXPORTER_COMPONENT: "node-exporter"
+  NODE_EXPORTER_VERSION: "1.0" # If you change the builder, bump the version here
+  # This variable is also set by the kaniko image based on provided COMPONENT and VERSION
+  # If these match, and an image is built in the pipeline, the sha digest is used instead in scripts
+  # this has no effect on gitlab job definitions (image:xyz) though as these are resolved before any scripts are run
+  NODE_EXPORTER_IMAGE: "$CI_REGISTRY_IMAGE/$NODE_EXPORTER_COMPONENT:$NODE_EXPORTER_VERSION"
+  
+node-exporter-build:
+  extends: .kaniko-build-template
+  stage: .pre
+  variables:
+    COMPONENT: $NODE_EXPORTER_COMPONENT
+    CONTEXT: "node_exporter"
+    DOCKERFILE: "node_exporter/Dockerfile"
+  only:
+    changes:
+      - node_exporter/**/*

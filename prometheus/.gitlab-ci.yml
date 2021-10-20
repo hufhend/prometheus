@@ -1,0 +1,18 @@
+variables:
+  PROMETHEUS_COMPONENT: "prometheus"
+  PROMETHEUS_VERSION: "1.0" # If you change the builder, bump the version here
+  # This variable is also set by the kaniko image based on provided COMPONENT and VERSION
+  # If these match, and an image is built in the pipeline, the sha digest is used instead in scripts
+  # this has no effect on gitlab job definitions (image:xyz) though as these are resolved before any scripts are run
+  PROMETHEUS_IMAGE: "$CI_REGISTRY_IMAGE/$PROMETHEUS_COMPONENT:$PROMETHEUS_VERSION"
+  
+prometheus-build:
+  extends: .kaniko-build-template
+  stage: .pre
+  variables:
+    COMPONENT: $PROMETHEUS_COMPONENT
+    CONTEXT: "prometheus"
+    DOCKERFILE: "prometheus/Dockerfile"
+  only:
+    changes:
+      - prometheus/**/*
