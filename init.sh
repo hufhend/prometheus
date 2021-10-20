@@ -3,7 +3,7 @@
 #   begin     : Thu 20 May 2021.
 #   copyright : (c) 2021 Václav Dvorský
 #   email     : vaclav.dvorsky@inventi.cz
-#   $Id: init.sh, v1.70 20/10/2021
+#   $Id: init.sh, v1.75 20/10/2021
 #   test with Prom v2.27.1, Grafana v8.0.2
 #   *******************************************
 #
@@ -16,7 +16,6 @@
 
 #!/bin/bash
     # preparing the environment for the first run
-    cd prometheus
     mkdir -p prometheus/data
     mkdir -p prometheus/data/chunks_head
     mkdir -p prometheus/data/wal
