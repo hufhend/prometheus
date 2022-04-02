@@ -57,6 +57,17 @@ services:
     expose:
       - 9100
 
+  snmp-exporter:
+    build:
+      context: ./snmp-exporter
+      dockerfile: Dockerfile
+    container_name: snmp-exporter
+    expose:
+      - "9116"
+    volumes:
+      - "$PWD/snmp-exporter:/etc/snmp-exporter"
+    restart: always
+
   nginx-proxy:
     build:
       context: ./nginx-proxy
