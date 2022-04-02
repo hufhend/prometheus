@@ -64,8 +64,8 @@ services:
     container_name: snmp-exporter
     expose:
       - "9116"
-    volumes:
-      - "$PWD/snmp-exporter:/etc/snmp-exporter"
+#    volumes:
+#      - "$PWD/snmp-exporter:/etc/snmp-exporter"
     restart: always
 
   nginx-proxy:
