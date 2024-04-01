@@ -56,8 +56,10 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
-    expose:
-      - 9100
+    # expose:
+    #   - 9100
+    ports:
+      - "9100:9100"
 
   snmp-exporter:
     build:
