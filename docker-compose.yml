@@ -70,5 +70,6 @@ services:
     restart: always
 
 networks:
-  default:
+  prometheus:
     name: prometheus
+    external: false
