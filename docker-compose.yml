@@ -73,3 +73,5 @@ networks:
   prometheus:
     name: prometheus
     external: false
+  nginx-proxy:
+    external: true
