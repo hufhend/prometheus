@@ -31,7 +31,7 @@ if ! [ $(id -u) = 0 ]; then
     touch prometheus/data/queries.active
     touch prometheus/data/lock
     sudo chown -R nobody:nogroup prometheus/data
-    sudo chown -R 472:root grafana/data
+    sudo chown -R 472:root grafana/data grafana/etc
     sudo chown nobody:nogroup alertmanager/data
 
   exit 0
