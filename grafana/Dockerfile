@@ -13,7 +13,7 @@ FROM grafana/grafana
 #######
 #FROM base as production
 
-COPY ./etc/grafana.ini /etc/grafana/grafana.ini
+#COPY ./etc/grafana.ini /etc/grafana/grafana.ini
 
 LABEL maintainer="Grafana team <hello@grafana.com>"
 
