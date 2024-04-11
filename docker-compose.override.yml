@@ -1,10 +1,10 @@
 services:
   grafana:
-    volumes:
-      - "./grafana/etc/grafana.ini:/etc/grafana/grafana.ini"
     environment:
       - VIRTUAL_PORT=3000
 #      - LETSENCRYPT_TEST=true
       - VIRTUAL_HOST=grafana.akira.cz
       - LETSENCRYPT_HOST=grafana.akira.cz
       - LETSENCRYPT_EMAIL=hufhendr@gmail.com
+    networks:
+      - nginx-proxy
