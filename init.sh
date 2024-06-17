@@ -28,8 +28,8 @@ if ! [ $(id -u) = 0 ]; then
     mkdir -p prometheus/data/wal
     mkdir -p grafana/data
     mkdir -p alertmanager/data
-    touch prometheus/data/queries.active
-    touch prometheus/data/lock
+    sudo touch prometheus/data/queries.active
+    sudo touch prometheus/data/lock
     sudo chown -R nobody:nogroup prometheus/data
     sudo chown -R 472:root grafana/data grafana/etc
     sudo chown nobody:nogroup alertmanager/data
