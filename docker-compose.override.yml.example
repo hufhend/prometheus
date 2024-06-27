@@ -1,0 +1,15 @@
+services:
+  grafana:
+    environment:
+      - VIRTUAL_PORT=3000
+      # - LETSENCRYPT_TEST=true
+      - VIRTUAL_HOST=grafana.example.com
+      - LETSENCRYPT_HOST=grafana.example.com
+      - LETSENCRYPT_EMAIL=hufhendr@gmail.com
+
+# This is ready for Let's Encrypt, which you can deploy without any configuration 
+# https://github.com/hufhend/acme-companion/blob/main/docker-compose.yaml      
+    networks:
+      - nginx-proxy
+  nginx-proxy:
+    external: true

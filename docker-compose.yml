@@ -28,7 +28,6 @@ services:
     container_name: grafana
     volumes:
       - "./grafana/data:/var/lib/grafana"
-      # - "./grafana/etc/grafana.ini:/etc/grafana/grafana.ini"
       - "./grafana/etc/provisioning:/etc/grafana/provisioning"
     ports:
       - "3000:3000"
@@ -66,13 +65,9 @@ services:
     container_name: snmp-exporter
     expose:
       - "9116"
-#    volumes:
-#      - "./snmp-exporter:/etc/snmp-exporter"
     restart: always
 
 networks:
   default:
     name: prometheus
     external: false
-  nginx-proxy:
-    external: true
