@@ -1,7 +1,7 @@
 #######
 ### snmp-exporter
 #######
-FROM prom/snmp-exporter:v0.22.0
+FROM prom/snmp-exporter
 
 #######
 ### CI
